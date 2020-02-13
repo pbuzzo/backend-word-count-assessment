@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 # Copyright 2010 Google Inc.
@@ -41,16 +41,54 @@ print_words() and print_top().
 
 import sys
 
-# +++your code here+++
-# Define print_words(filename) and print_top(filename) functions.
-# You could write a helper utility function that reads a file
-# and builds and returns a word/count dict for it.
-# Then print_words() and print_top() can just call the utility function.
 
-###
+def print_words(filename):
+    counter = {}
+    with open(filename, 'r') as f:
+        for line in f:
+            single_words = line.split()
+            for word in single_words:
+                if word.lower() in counter:
+                    # check to see if word has already been counted
+                    # use .lower() to create less confusion between upper and
+                    # lower case versions
+                    counter[word.lower()] = counter[word.lower()] + 1
+                else:
+                    counter[word.lower()] = 1  # initialize value for that key
+    count_keys = counter.keys()
+    # use sorted over sort/see key usage
+    # https://www.pitt.edu/~naraehan/python3/sorting.html
+    for i in sorted(count_keys):
+        print i, counter[i]
 
-# This basic command line argument parsing code is provided and
-# calls the print_words() and print_top() functions which you must define.
+
+def get_value(entry):
+    if len(entry) > 1:
+        return entry[1]
+
+
+def print_top(filename):
+    counter = {}
+    len_counter = {}
+    with open(filename, 'r') as f:
+        for line in f:
+            single_words = line.split()
+            for word in single_words:
+                if word.lower() in counter:
+                    # check to see if word has already been counted
+                    counter[word.lower()] = counter[word.lower()] + 1
+                else:
+                    counter[word.lower()] = 1
+    # use .items() to work with all tuples in dict
+    # https://thispointer.com/python-how-to-sort-a-dictionary-by-key-or-value/
+    workable_items = counter.items()
+    # https://www.tutorialspoint.com/How-to-iterate-through-a-dictionary-in-Python
+    len_counter = sorted(workable_items, key=get_value, reverse=True)
+    top_twenty = len_counter[:20]
+    for entry in top_twenty:
+        print entry[0], entry[1]
+
+# main function
 
 
 def main():
@@ -71,3 +109,12 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+"""
+Additional resources used:
+    https://realpython.com/python-sort/
+    https://stackoverflow.com/questions/19796050/how-to-get-largest-and-smallest-number-in-a-sorted-list
+    smallest to largest:
+    https://www.geeksforgeeks.org/python-largest-smallest-second-largest-second-smallest-list/
+"""
